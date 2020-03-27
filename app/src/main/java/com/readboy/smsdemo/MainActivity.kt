@@ -1,23 +1,14 @@
 package com.readboy.smsdemo
 
-import android.Manifest
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.provider.Settings
-import android.widget.Toast
-import androidx.core.app.ActivityCompat
+import com.readboy.smsdemo.util.CallLogUtils
 import com.readboy.smsdemo.util.ContactUtil
 import com.readboy.smsdemo.util.MessageUtil
 import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : BaseActivity() {
-    private val callLogRequestCode = 1
-    private val contactRequestCode = 2
-    private val smsRequestCode = 3
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,8 +19,10 @@ class MainActivity : BaseActivity() {
         }
 
         btn_get_contact.setOnClickListener {
-            tvContent.text = ""
             readContact()
+        }
+        btn_get_call_log.setOnClickListener {
+            readCallLog()
         }
 
     }
@@ -55,18 +48,13 @@ class MainActivity : BaseActivity() {
         }
     }
 
-
-    override fun onActivityResult(
-        requestCode: Int,
-        resultCode: Int,
-        data: Intent?
-    ) {
-        super.onActivityResult(requestCode, resultCode, data)
-      if (requestCode == contactRequestCode) {
-            readContact()
-        } else if (requestCode == smsRequestCode) {
-            readMessage()
-        }
+    /**
+     * 读取通话记录
+     */
+    private fun readCallLog() {
+        val callLogInfos =
+            CallLogUtils.getCallLogInfos(this, 0)
+        tvContent.text = callLogInfos.toString()
     }
 
 }
